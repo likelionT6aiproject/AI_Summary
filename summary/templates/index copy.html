@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Summarizer</title>
+</head>
+<body>
+    <h1>Text Summarizer</h1>
+    <textarea id="text-input" rows="10" cols="50" placeholder="요약할 텍스트를 입력하세요"></textarea><br>
+    <button id="summarize-button">요약하기</button>
+    <h2>요약 결과</h2>
+    <p id="summary-output"></p>
+
+    <script>
+        document.getElementById('summarize-button').addEventListener('click', function() {
+            const text = document.getElementById('text-input').value;
+            const data = { text: text };
+
+            fetch('http://127.0.0.1:8000/summary/summarize/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('summary-output').innerText = data.summary;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

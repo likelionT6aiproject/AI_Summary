@@ -1,9 +1,13 @@
-from rest_framework.decorators import api_view
+from django.shortcuts import render
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import nltk
 import os
+from .serializers import TextSerializer
+from .utils import save_text_file
+from .models import Summary
 
 # NLTK 다운로드
 nltk.download('punkt')
@@ -15,27 +19,29 @@ tokenizer = AutoTokenizer.from_pretrained('eenzeenee/t5-base-korean-summarizatio
 prefix = "summarize: "
 save_directory = ""
 
-@api_view(['POST'])
-def summarize(request):
-    text = request.data.get('text', '')
+class SummarizeView(APIView):
+    def post(self, request):
+        serializer = TextSerializer(data=request.data)
+        if serializer.is_valid():
+            text = serializer.validated_data['text']
+            #user_id = request.user.id
+            user_id = 1
+            inputs = [prefix + text]
+            inputs = tokenizer(inputs, max_length=512, truncation=True, return_tensors="pt")
+            output = model.generate(**inputs, num_beams=3, do_sample=True, min_length=10, max_length=64)
+            decoded_output = tokenizer.batch_decode(output, skip_special_tokens=True)[0]
+            summary_text = nltk.sent_tokenize(decoded_output.strip())[0]
 
-    if not text:
-        return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+            original_url = save_text_file(text, user_id, 'original_text')
+            summary_url = save_text_file(summary_text, user_id, 'summary_text')
 
-    inputs = [prefix + text]
-    inputs = tokenizer(inputs, max_length=512, truncation=True, return_tensors="pt")
-    output = model.generate(**inputs, num_beams=3, do_sample=True, min_length=10, max_length=64)
-    decoded_output = tokenizer.batch_decode(output, skip_special_tokens=True)[0]
-    result = nltk.sent_tokenize(decoded_output.strip())[0]
+            summary = Summary.objects.create(original_text_path=original_url, summary_text_path=summary_url, user_id=user_id)
 
-    with open(os.path.join(save_directory, 'original_text.txt'), 'w', encoding='utf-8') as f:
-        f.write(text)
-    with open(os.path.join(save_directory, 'summary_text.txt'), 'w', encoding='utf-8') as f:
-        f.write(result)
+            return Response({'summary': summary_text}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({'summary': result})
-
-@api_view(['GET'])
-def index(request):
-    return Response({'message': 'Welcome to the summarizer API'})
+class IndexView(APIView):
+    def get(self, request):
+        return render(request, 'index.html')
+    
 

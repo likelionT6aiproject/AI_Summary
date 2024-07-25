@@ -1,7 +1,8 @@
 ﻿Django
 numpy
 requests
-tensorflow-gpu
+tensorflow>=2.12.0
 torch
 torchvision
 transformers
+gunicorn

@@ -1,8 +1,10 @@
 ﻿Django
+djangorestframework
 numpy
 requests
-tensorflow>=2.12.0
 torch
-torchvision
 transformers
 gunicorn
+asgiref
+nltk
+python-dotenv

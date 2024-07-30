@@ -54,24 +54,15 @@
             margin-top: 20px;
             color: #777;
         }
-        .summary-output {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            font-size: 16px;
-            color: #333;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>텍스트 요약 서비스</h1>
-        <form id="summary-form">
-            <textarea name="text" id="text-input" placeholder="여기에 텍스트를 입력하세요..." required></textarea>
+        <form action="/summarize" method="post">
+            <textarea name="text" placeholder="여기에 텍스트를 입력하세요..." required></textarea>
             <button type="submit"><i class="fas fa-file-alt"></i> 요약하기</button>
         </form>
-        <div id="summary-output" class="summary-output" style="display: none;"></div>
     </div>
     <div class="footer">
         <p>&copy; 2024 텍스트 요약 서비스. All rights reserved.</p>

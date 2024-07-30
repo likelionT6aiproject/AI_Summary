@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import summarize, index
+from .views import SummarizeView, IndexView
 
 urlpatterns = [
-    path('summarize/', summarize, name='summarize'),
-    path('', index, name='index'),
+    path('summarize/', SummarizeView.as_view(), name='summarize'),
+    path('', IndexView.as_view(), name='index'),
 ]

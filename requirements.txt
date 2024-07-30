@@ -1,7 +1,7 @@
 ﻿Django
 numpy
 requests
-tensorflow-gpu
 torch
 torchvision
 transformers
+python-dotenv

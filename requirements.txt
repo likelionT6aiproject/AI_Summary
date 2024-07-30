@@ -1,10 +1,10 @@
 ﻿Django
 djangorestframework
-numpy
-requests
-torch
-transformers
-gunicorn
-asgiref
-nltk
+psycopg2
 python-dotenv
+requests
+sqlparse
+torch
+gunicorn
+transformers
+

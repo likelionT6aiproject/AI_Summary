@@ -35,7 +35,7 @@ class SummarizeView(APIView):
             original_url = save_text_file(text,'original_text')
             summary_url = save_text_file(summary_text,'summary_text')
 
-            summary = Summary.objects.create(original_text_path=original_url, summary_text_path=summary_url)
+            Summary.objects.create(origin_text_path=original_url, summary_text_path=summary_url)
 
             return Response({'summary': summary_text}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -7,5 +7,5 @@ class Summary(models.Model):
     #user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     origin_text_path=models.URLField()
     summary_text_path=models.URLField()
-    created_at=models.DateTimeField()
+    created_at=models.DateTimeField(auto_now_add=True)
     
